@@ -9,10 +9,71 @@ class TTTBoard:
         board - a list of '*'s, 'X's & 'O's. 'X's represent moves by player 'X', 'O's
             represent moves by player 'O' and '*'s are spots no one has yet played on
     """
+    def __init__(self) -> None:
+        self.board = ["*","*","*","*","*","*","*","*","*"]
 
-    pass
+    def __str__(self) -> str:
+        str = ""
+        for i, val in enumerate(self.board):
+            str += val
+            if i == 2 or i == 5:
+                str += "\n"
+        return str
+    
+    def make_move(self, player, pos) -> None:
+        if self.board[pos] == '*':
+            self.board[pos] = player
+            return True
+        else:
+            return False
+        
+    def has_won(self, player):
+        places = []
+        for i, val in enumerate(self.board):
+            if val == player:
+                places.append(i)
 
+        winning =  [
+                [0,3,6], 
+                [1,4,7], 
+                [2,5,8], 
+                [0,1,2],
+                [3,4,5],
+                [6,7,8], 
+                [0,4,8],
+                [2,4,6]
+            ]
 
+        main_set = set(places)
+        for sublist in winning:
+            if set(sublist).issubset(main_set):  # Check if the sublist is a subset of the main set
+                return True  # Return True if any sublist is contained
+        return False
+    
+    def game_over(self):
+        if self.has_won("X") or self.has_won("O"):
+            return True
+        if not "*" in self.board:
+            return True
+        return False
+        
+    def clear(self):
+        self.board = ["*","*","*","*","*","*","*","*","*"]
+
+"""
+    0 1 2
+    3 4 5
+    6 7 8
+
+    036 147 258
+    012 345 678
+    048 246
+
+    if contains, & bitwise
+https://www.tutorialspoint.com/python-program-to-test-if-any-set-element-exists-in-list 
+
+"""
+    
 def play_tic_tac_toe() -> None:
     """Uses your class to play TicTacToe"""
 
@@ -61,8 +122,12 @@ if __name__ == "__main__":
     # need to write some more tests to make sure that your TTTBoard class is behaving
     # properly.
     brd = TTTBoard()
+
     brd.make_move("X", 8)
     brd.make_move("O", 7)
+
+    print(brd, "\n")
+
 
     assert brd.game_over() == False
 
@@ -72,6 +137,8 @@ if __name__ == "__main__":
 
     assert brd.has_won("X") == True
     assert brd.has_won("O") == False
+    print(brd)
+
     assert brd.game_over() == True
 
     brd.clear()
@@ -88,5 +155,4 @@ if __name__ == "__main__":
 
     print("All tests passed!")
 
-    # uncomment to play!
-    # play_tic_tac_toe()
+    play_tic_tac_toe()
